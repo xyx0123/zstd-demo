@@ -1,0 +1,6 @@
+# .gitpod.yml
+image:
+  file: .gitpod.Dockerfile
+tasks:
+  - init: g++ -std=c++17 -o zstd_decompress_dir main.cpp -lzstd
+    command: ./zstd_decompress_dir /tmp/zstd_files/
