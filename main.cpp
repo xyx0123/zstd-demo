@@ -7,7 +7,7 @@
 namespace fs = std::filesystem;
 
 bool decompressFile(const fs::path& inputPath) {
-    // 打开 .zst 文件
+    // 打开 .zst 或 .zstd 文件
     std::ifstream input(inputPath, std::ios::binary | std::ios::ate);
     if (!input) {
         std::cerr << "Failed to open: " << inputPath << "\n";
@@ -39,9 +39,9 @@ bool decompressFile(const fs::path& inputPath) {
         return false;
     }
 
-    // 写入解压后的文件
+    // 写入解压后的文件，并加上 .zstd 后缀
     fs::path outputPath = inputPath;
-    outputPath.replace_extension();  // 去掉 .zst 后缀
+    outputPath.replace_extension(".zstd");
 
     std::ofstream output(outputPath, std::ios::binary);
     if (!output.write(decompressed.data(), actualSize)) {
@@ -72,8 +72,9 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if (filePath.extension() != ".zst") {
-        std::cerr << "The file is not a .zst file: " << filePath << "\n";
+    // 检查文件扩展名是 .zst 或 .zstd
+    if (filePath.extension() != ".zst" && filePath.extension() != ".zstd") {
+        std::cerr << "The file is neither a .zst nor a .zstd file: " << filePath << "\n";
         return 1;
     }
 
