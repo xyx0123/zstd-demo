@@ -60,6 +60,9 @@ bool decompressFile(const fs::path& inputPath) {
 }
 
 int main(int argc, char* argv[]) {
+    // 打印 Zstd 库的版本信息
+    std::cout << "Zstd version: " << ZSTD_versionString() << "\n";
+    
     if (argc != 2) {
         std::cerr << "Usage: zstd_decompress <file_path>\n";
         return 1;
