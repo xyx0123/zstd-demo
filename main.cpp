@@ -55,21 +55,23 @@ bool decompressFile(const fs::path& inputPath) {
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
-        std::cerr << "Usage: zstd_decompress_dir <directory_path>\n";
+        std::cerr << "Usage: zstd_decompress <file_path>\n";
         return 1;
     }
 
-    fs::path dirPath = argv[1];
-    if (!fs::is_directory(dirPath)) {
-        std::cerr << "Not a directory: " << dirPath << "\n";
+    fs::path filePath = argv[1];
+
+    if (!fs::exists(filePath)) {
+        std::cerr << "File does not exist: " << filePath << "\n";
         return 1;
     }
 
-    for (const auto& entry : fs::directory_iterator(dirPath)) {
-        if (entry.is_regular_file() && entry.path().extension() == ".zst") {
-            decompressFile(entry.path());
-        }
+    if (filePath.extension() != ".zst") {
+        std::cerr << "The file is not a .zst file: " << filePath << "\n";
+        return 1;
     }
+
+    decompressFile(filePath);
 
     return 0;
 }
